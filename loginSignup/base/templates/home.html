@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    
+</style>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Welcome, {{ request.user.username }}</h1>
+        <p>Your personalized dashboard</p>
+    </div>
+
+    <div class="dashboard-links">
+        
+        <a href="{% url 'password_change' %}" class="password-link">Change Password</a>
+        <a href="{% url 'login' %}" class="login-link">Logout</a>
+    </div>
+</div>
+{% endblock content %}
