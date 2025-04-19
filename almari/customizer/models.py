@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+
 
 # Create your models here.
 
@@ -18,7 +19,7 @@ class Product(models.Model):
         return self.name
 
 class CustomProduct(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     artwork = models.ImageField(upload_to='user_artworks/')
     canvas_data = models.TextField()  # for storing customization JSON

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UsergoggleloginConfig(AppConfig):
+class UserGoogleLoginConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'googlelogin.usergooglelogin'
+    name = 'loginSignup.googlelogin.usergooglelogin'

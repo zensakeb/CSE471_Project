@@ -25,5 +25,4 @@ urlpatterns = [
     path("", include(("base.urls", "base"), "base")),
     path('core/', include('core.urls')),
     path('google/', include('googlelogin.usergooglelogin.urls')),
-    path('auth/', include('social_django.urls', namespace='social'))
 ] 

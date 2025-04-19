@@ -1,22 +1,17 @@
 from django.urls import path, include
-from .views import authView, home, CustomPasswordChangeView
+from . import views
 from django.contrib.auth import views as auth_views
 
+app_name = 'base'
+
 urlpatterns = [
- path("", home, name="home"),
- path("signup/", authView, name="authView"),
- path("accounts/", include("django.contrib.auth.urls")),
- # Password change
- path('password_change/', CustomPasswordChangeView.as_view(), name='password_change'),
- path(
-    'password_change/done/',
-    auth_views.PasswordChangeDoneView.as_view(template_name="registration/password_change_done.html"),
-    name='password_change_done'
-),
-
- path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
- path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
- path('google/', include('googlelogin.usergooglelogin.urls')),
- path('auth/', include('social_django.urls', namespace='social'))
+    path("", views.home, name="home"),  # Home page route
+    path("signup/", views.authView, name="authView"),  # Signup page
+    path("login/", views.login_view, name="login"),  # Add this for login page
+    # Password change routes
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('google/', include('loginSignup.googlelogin.usergooglelogin.urls')),  # Google login
 ]
-

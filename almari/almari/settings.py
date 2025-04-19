@@ -41,7 +41,12 @@ INSTALLED_APPS = [
     'products',
     'users',
     'social',
+    'social_django',
     'rest_framework',
+    'core',
+    'customizer',
+    'loginSignup.base.apps.BaseConfig',
+    'loginSignup.googlelogin.usergooglelogin.apps.UserGoogleLoginConfig',
 ]
 
 MIDDLEWARE = [
@@ -126,3 +131,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "663816783718-3qu8lsdbamrfae3ej0jpgc6491hg4r36.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
+
+LOGIN_URL = 'base:login'
+LOGIN_REDIRECT_URL = "core:frontpage"	
+LOGOUT_REDIRECT_URL = "base:login" # Make sure to replace this with the correct URL name for your front page
+
