@@ -75,3 +75,22 @@
     border-color: #10182F;
    
    }
+   .google-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 15px;
+    background-color: #4285F4;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Mulish', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .google-btn:hover {
+    background-color: #357ae8;
+  }

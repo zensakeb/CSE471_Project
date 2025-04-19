@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'base',
+    'base', 'googlelogin.usergooglelogin',
+    'social_django', 'core',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'loginSignup.urls'
@@ -63,6 +65,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -123,7 +127,13 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
-LOGIN_REDIRECT_URL = "base:home"
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "663816783718-3qu8lsdbamrfae3ej0jpgc6491hg4r36.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+LOGIN_REDIRECT_URL = "core:frontpage"	
 LOGOUT_REDIRECT_URL = "base:login"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
