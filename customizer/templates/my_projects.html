@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Projects</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #c97cff 0%, #ff86aa 40%, #ffb084 100%);
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+
+    .project {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .project img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .project h4 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .project p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .project strong {
+      color: #222;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <h2>My Uploaded Projects</h2>
+
+  {% for p in projects %}
+    <div class="project">
+      <h4>{{ p.product.name }}</h4>
+      <p><strong>Description:</strong> {{ p.description }}</p>
+      <img src="{{ p.artwork.url }}" alt="Artwork">
+     
+      <a href="{% url 'edit_project' p.id %}" style="margin-right: 10px; color: green;">Edit</a>
+      <a href="{% url 'delete_project' p.id %}" style="color: red;" onclick="return confirm('Are you sure you want to delete this?');">Delete</a>
+    </div>
+  {% empty %}
+    <p style="color:white; text-align:center;">No projects found yet.</p>
+  {% endfor %}
+
+</body>
+</html>
