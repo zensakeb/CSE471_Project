@@ -26,7 +26,7 @@ urlpatterns = [
     path('orders/', include('orders.urls')),
     path('products/', include('products.urls')),
     path('social/', include('social.urls')),
-    path('users/', include('users.urls')),
+    path('users/', include('users.urls', namespace='users')),
     path('customizer/', include('customizer.urls')),
     path('auth/', include('django.contrib.auth.urls')),
     path('auth/google/', include('loginSignup.googlelogin.usergooglelogin.urls')),

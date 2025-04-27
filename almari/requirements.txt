@@ -1,0 +1,23 @@
+# Core Django
+Django>=5.2
+
+# Database
+pymysql
+
+# Authentication and Social Auth
+social-auth-app-django
+python-social-auth[django]
+
+# REST API
+djangorestframework
+
+# Required by social auth
+requests
+oauthlib
+python-jose[cryptography]
+
+# For handling images (since there's a Media folder)
+Pillow
+
+# Development tools (optional but recommended)
+django-debug-toolbar

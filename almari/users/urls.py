@@ -6,7 +6,6 @@ from . import views
 app_name = 'users'
 
 urlpatterns = [
-    # example: user profile or dashboard
-    path('', views.profile, name='profile'),
+    path('profile/', views.profile, name='view_profile'),  # Changed to be more explicit
     path('edit_profile/', views.edit_profile, name='edit_profile'),
 ]
