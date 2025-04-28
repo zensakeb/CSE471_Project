@@ -1,0 +1,26 @@
+.menu-container {
+    position: relative;
+    display: inline-block;
+  }
+  #menu-button {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .submenu.show {
+    display: block;
+  }
+  .submenu ul { margin:0; padding:0; list-style:none; }
+  .submenu li { padding:8px; }
+  .submenu li a { text-decoration:none; color:#333; display:block; }
+  .submenu li a:hover { background:#f0f0f0; }
+  
