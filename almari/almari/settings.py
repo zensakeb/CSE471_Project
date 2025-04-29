@@ -11,6 +11,19 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+import environ
+from django.conf import settings
+from django.conf.urls.static import static
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Initialize environment
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,9 +56,7 @@ INSTALLED_APPS = [
     'social',
     'social_django',
     'rest_framework',
-    'core',
     'customizer',
-    'loginSignup.base.apps.BaseConfig',
     'loginSignup.googlelogin.usergooglelogin.apps.UserGoogleLoginConfig',
 ]
 
@@ -64,17 +75,24 @@ ROOT_URLCONF = 'almari.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.request',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',  # ✅ Already good
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                'social_django.context_processors.backends',  # ✅ Needed
+                'social_django.context_processors.login_redirect',  # ✅ Needed
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'almari.wsgi.application'
 
@@ -83,11 +101,10 @@ WSGI_APPLICATION = 'almari.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': env.db('DATABASE_URL')
 }
+
+
 
 
 # Password validation
@@ -114,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
@@ -124,11 +141,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [str(BASE_DIR / "static")]
 
+MEDIA_URL = '/Media/'
+MEDIA_ROOT = str(BASE_DIR / "Media")
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
+DEBUG = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 AUTHENTICATION_BACKENDS = (
@@ -141,7 +161,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
 
-LOGIN_URL = 'base:login'
-LOGIN_REDIRECT_URL = "core:frontpage"	
-LOGOUT_REDIRECT_URL = "base:login" # Make sure to replace this with the correct URL name for your front page
+LOGIN_URL = 'base:login'  # Make sure to replace this with the correct URL name for your login page
+LOGIN_REDIRECT_URL = "/"	 # Make sure to replace this with the correct URL name for your front page
 
+SOCIAL_AUTH_URL_NAMESPACE = 'social_auth'
