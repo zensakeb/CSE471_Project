@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="shadow-wrap">
+  <div class="form-wrap">
+    <h3>Sign Up</h3>
+
+    {% if form.non_field_errors %}
+      <div class="error">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+
+      <div>
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+
+      <div>
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {{ form.email.errors }}
+      </div>
+
+      <div>
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+      </div>
+
+      <div>
+        {{ form.password2.label_tag }}
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+      </div>
+
+      <button type="submit" class="w-full py-3 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-all">
+        Create Account
+      </button>
+      
+    </form>
+
+    <p style="text-align: center; margin-top: 1rem;">
+      Already have an account?
+      <a href="{% url 'users:login' %}" style="color: #2563eb;">Login here</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  .error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+</style>
+{% endblock content %}
