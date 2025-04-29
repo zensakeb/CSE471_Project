@@ -14,7 +14,7 @@ class Review(models.Model):
 class SocialWallPost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    image_url = models.URLField()
+    image = models.ImageField(upload_to='social_posts/', null=True, blank=True)
     caption = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
