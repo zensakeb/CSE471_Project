@@ -1,14 +1,14 @@
 from django import forms
-<<<<<<< HEAD
+
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-=======
+
 from django.contrib.auth.forms import UserCreationForm
->>>>>>> 5df4f2df0734fccee54bb6b324586aa9d0d8b5cc
+
 from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
-<<<<<<< HEAD
+
         model = CustomUser  # Ensure this is using CustomUser
         fields = ('username', 'email', 'password1', 'password2')
 
@@ -54,7 +54,7 @@ class CustomAuthenticationForm(AuthenticationForm):
             'placeholder': 'Password',
             'class': 'form-control'
         })
-=======
+
         model = CustomUser
         fields = ('username', 'email', 'password1', 'password2')
 
@@ -63,4 +63,3 @@ class UserUpdateForm(forms.ModelForm):
         model = CustomUser
         fields = ['username', 'email', 'first_name', 'last_name', 'phone', 'address']
       
->>>>>>> 5df4f2df0734fccee54bb6b324586aa9d0d8b5cc
