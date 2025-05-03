@@ -7,10 +7,11 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
+    profile_image = forms.ImageField(required=False)
     class Meta:
 
         model = CustomUser  # Ensure this is using CustomUser
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'profile_image')
 
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
@@ -30,12 +31,15 @@ class CustomUserCreationForm(UserCreationForm):
             'placeholder': 'Confirm password',
             'class': 'form-control'
         })
+        self.fields['profile_image'].widget.attrs.update({
+            'class': 'form-control'
+        })
 
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser  # Ensure this is using CustomUser
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['username', 'email', 'first_name', 'last_name', 'phone', 'address', 'profile_image']
 
     def __init__(self, *args, **kwargs):
         super(UserUpdateForm, self).__init__(*args, **kwargs)

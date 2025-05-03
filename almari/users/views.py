@@ -8,10 +8,12 @@ from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from users.forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib import messages
-from .models import CustomUser
+from .models import CustomUser, CartItem, UserActionLog
 from social_django.utils import psa
 from .forms import UserUpdateForm  # Import the form
 from django.contrib.auth.models import User
+from .supabase_client import supabase
+import uuid
 
 
 
@@ -28,14 +30,20 @@ class CustomLoginView(LoginView):
         user = self.request.user
         if user.is_superuser:
             return reverse_lazy('users:admin_dashboard')
-        return reverse_lazy('users:profile')
+        return reverse_lazy('users:frontpage')
+
     
 def authView(request):
     # Handle your authentication (sign up) logic here
     return render(request, 'registration/signup.html')
 
+@login_required
 def frontpage(request):
-    return render(request, 'core/frontpage.html')
+    return render(request, 'core/frontpage.html', {
+        'user_id': request.user.id,
+        'username': request.user.username,
+    })
+
 
 # Profile View
 @login_required
@@ -47,28 +55,33 @@ def profile(request):
 @login_required
 def edit_profile(request, user_id=None):
     if user_id:
-        # Retrieve the user based on user_id
         user = get_object_or_404(CustomUser, id=user_id)
-        if not request.user.is_staff:  # Ensure that only admins can edit others' profiles
-            return redirect('users:profile')  # Redirect if the logged-in user is not an admin
+        is_admin_editing = (user != request.user and request.user.is_staff)
+        if not is_admin_editing and user != request.user:
+            return redirect('users:profile')
     else:
-        user = request.user  # Default to the logged-in user
-    
+        user = request.user
+        is_admin_editing = False
+
     if request.method == 'POST':
-        # Pass the correct user instance to the form
-        form = UserUpdateForm(request.POST, instance=user)
-        print("Form data:", request.POST)
+        form = UserUpdateForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            messages.success(request, "Your profile has been updated!")
-            return redirect('users:profile')  # Redirect to the profile page after successful edit
+            messages.success(request, "Profile updated successfully!")
+            if is_admin_editing:
+                return redirect('users:admin_dashboard')  # ✅ admin goes back to dashboard
+            else:
+                return redirect('users:frontpage')  # ✅ normal user goes to frontpage
         else:
-            print("Form errors:", form.errors)  # Debugging line to check form errors
+            print("Form errors:", form.errors)
     else:
-        # Pass the correct user instance to the form
         form = UserUpdateForm(instance=user)
 
-    return render(request, 'users/edit_profile.html', {'form': form, 'user': user, 'hide_nav': True})
+    return render(request, 'users/edit_profile.html', {
+        'form': form,
+        'user': user,
+        'hide_nav': True
+    })
 
 # User Deactivation View
 @login_required
@@ -124,17 +137,106 @@ def google_login(request, *args, **kwargs):
     # Logic for Google OAuth login
     pass
 
+# users/views.py
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import CustomUserCreationForm
+from .supabase_client import supabase
+import uuid
+
+import uuid
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import CustomUserCreationForm
+from .models import CustomUser
+from .supabase_client import supabase
+
 def signup_view(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+
+            image = request.FILES.get('profile_image')
+            if image:
+                # Generate a unique filename
+                ext = image.name.rsplit('.', 1)[-1].lower()
+                image_name = f"{uuid.uuid4()}.{ext}"
+                file_path = f"profiles/{image_name}"
+
+                # Read the uploaded file into bytes
+                data = image.read()
+
+                # Upload bytes to Supabase
+                res = supabase.storage.from_('user-profile-images') \
+                           .upload(file_path, data, {'content-type': image.content_type})
+                if hasattr(res, 'error') and res.error:
+                    print("Upload failed:", res.error)
+                else:
+                    # Retrieve public URL and save it
+                    public_url = supabase.storage.from_('user-profile-images') \
+                            .get_public_url(file_path)
+                    user.profile_image = public_url
+
+
+            user.save()
             messages.success(request, 'Account created successfully!')
-            return redirect('users:login')  # Redirect to login after successful signup
+            return redirect('users:login')
         else:
             messages.error(request, 'Error creating account. Please try again.')
-
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
 
-    return render(request, 'registration/signup.html', {'form': form, 'hide_nav': True})
+    return render(request, 'registration/signup.html', {
+        'form': form,
+        'hide_nav': True,
+    })
+
+
+def my_cart(request):
+    cart_items = CartItem.objects.filter(user=request.user)  # Assuming CartItem has a user field
+    return render(request, 'users/my_cart.html', {'cart_items': cart_items})
+
+def checkout(request):
+    return render(request, 'users/checkout.html')
+
+
+@login_required
+def add_to_cart(request, project_id):
+    project = get_object_or_404(Project, id=project_id)  # Ensure we get a Project
+    cart_item, created = CartItem.objects.get_or_create(user=request.user, product=project)  # Link cart item to project
+
+    if not created:
+        cart_item.quantity += 1  # Increase quantity if the item already exists
+        cart_item.save()
+
+    return redirect('users:my_cart')  # Redirect to cart after adding
+
+@login_required
+def remove_from_cart(request, project_id):
+    cart_item = CartItem.objects.filter(user=request.user, product_id=project_id).first()  # Get cart item
+    if cart_item:
+        cart_item.delete()  # Remove from cart if exists
+    return redirect('users:my_cart')
+
+
+@login_required
+def increase_quantity(request, product_id):
+    cart_item = get_object_or_404(CartItem, user=request.user, product_id=product_id)
+    cart_item.quantity += 1
+    cart_item.save()
+    return redirect('users:my_cart')
+
+@login_required
+def decrease_quantity(request, product_id):
+    cart_item = get_object_or_404(CartItem, user=request.user, product_id=product_id)
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        cart_item.delete()  # optional: remove item if quantity hits 0
+    return redirect('users:my_cart')
+
+def some_interaction_view(request):
+    if request.user.is_authenticated:
+        UserActionLog.objects.create(user=request.user, action="Clicked 'Buy Now'")

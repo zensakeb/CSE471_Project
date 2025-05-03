@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views  # Make sure to import auth_views
 from users.views import CustomLoginView  # Adjust path if needed
 from django.shortcuts import redirect
+from projects.views import frontpage
 
 # Add a custom view to handle redirection from '/' to the login page
 def redirect_to_login(request):
@@ -15,12 +16,12 @@ urlpatterns = [
     path('', redirect_to_login, name='home'),  # This ensures the homepage redirects to login
 
     path('admin/', admin.site.urls),
-    path('api/', include('orders.urls')),
-    path('orders/', include('orders.urls')),
-    path('products/', include('products.urls')),
-    path('social/', include('social.urls')),
+    # path('api/', include('orders.urls')),
+    # path('orders/', include('orders.urls')),
+    # path('social/', include('social.urls')),
     path('users/', include('users.urls', namespace='users')),
-    path('customizer/', include('customizer.urls')),
+    # path('customizer/', include('customizer.urls')),
+    path('projects/', include('projects.urls', namespace='projects')),
     path('auth/login/', CustomLoginView.as_view(), name='login'),
     path('auth/google/', include('loginSignup.googlelogin.usergooglelogin.urls')),
     path('auth/social/', include('social_django.urls', namespace='social_auth')),

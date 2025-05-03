@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="max-w-6xl mx-auto py-10 px-6">
+    <!-- User Details -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold">Hello, {{ request.user.username }}</h2>
+        <p>Your cart details:</p>
+    </div>
+
+    <!-- Cart Table -->
+    <div class="overflow-x-auto bg-white rounded-md shadow-lg">
+        <table class="min-w-full table-auto">
+            <thead>
+                <tr>
+                    <th class="px-6 py-3 text-left">Product</th>
+                    <th class="px-6 py-3 text-left">Quantity</th>
+                    <th class="px-6 py-3 text-left">Price</th>
+                    <th class="px-6 py-3 text-left">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td class="px-6 py-4">{{ item.product.name }}</td>
+                    <td class="px-6 py-4 flex items-center space-x-2">
+                        <form method="post" action="{% url 'users:decrease_quantity' item.product.id %}">
+                            {% csrf_token %}
+                            <button class="bg-gray-200 px-2 rounded">-</button>
+                        </form>
+                    
+                        <span class="px-2">{{ item.quantity }}</span>
+                    
+                        <form method="post" action="{% url 'users:increase_quantity' item.product.id %}">
+                            {% csrf_token %}
+                            <button class="bg-gray-200 px-2 rounded">+</button>
+                        </form>
+                    </td>
+                    
+                    <td class="px-6 py-4">${{ item.product.price }}</td>
+                    <td class="px-6 py-4">${{ item.total_price }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-6 py-4 text-center">No items in your cart.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Checkout Button -->
+    {% if cart_items %}
+        <div class="mt-8">
+            <a href="{% url 'checkout' %}" class="bg-green-500 text-white px-6 py-2 rounded-md">Checkout</a>
+        </div>
+    {% endif %}
+
+</main>
+{% endblock %}

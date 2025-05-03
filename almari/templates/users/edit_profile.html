@@ -1,14 +1,44 @@
 {% extends "base.html" %}
-
+{% block title %}Edit Profile – Almari{% endblock %}
 {% block content %}
-<div class="shadow-wrap">
-  <div class="form-wrap">
-    <h3>Edit Profile</h3>
-    <form method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn-submit">Update Profile</button>
-    </form>
-  </div>
+<body class="fullscreen-form">
+<div class="form-card">
+  <h2 class="text-2xl font-bold text-center mb-6">Edit Profile</h2>
+  <form method="POST" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+  
+    <label>Username</label>
+    {{ form.username }}
+    {{ form.username.errors }}
+  
+    <label>Email</label>
+    {{ form.email }}
+    {{ form.email.errors }}
+  
+    <label>First Name</label>
+    {{ form.first_name }}
+    {{ form.first_name.errors }}
+  
+    <label>Last Name</label>
+    {{ form.last_name }}
+    {{ form.last_name.errors }}
+
+    <label>Phone</label>
+    {{ form.phone }}
+    {{ form.phone.errors }}
+
+    <label>Address</label>
+    {{ form.address }}
+    {{ form.address.errors }}
+
+    <label>Profile Image</label>
+    {{ form.profile_image }}
+    {{ form.profile_image.errors }}
+  
+    <button type="submit">Update</button>
+  </form>
+  
 </div>
+</body>
 {% endblock %}

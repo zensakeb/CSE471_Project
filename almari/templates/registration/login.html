@@ -1,60 +1,28 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}Login – Almari{% endblock %}
+
 {% block content %}
-<div class="shadow-wrap">
-  <div class="form-wrap">
-    <h3>Login</h3>
-
-    {% if form.non_field_errors %}
-      <div class="error">
-        {{ form.non_field_errors }}
-      </div>
-    {% endif %}
-
-    <form method="POST" novalidate>
-      {% csrf_token %}
-
-      <div>
-        {{ form.username.label_tag }}
-        {{ form.username }}
-        {{ form.username.errors }}
-      </div>
-
-      <div>
-        {{ form.password.label_tag }}
-        {{ form.password }}
-        {{ form.password.errors }}
-      </div>
-
-      <div style="text-align: right; margin-bottom: 1rem;">
-        <a href="{% url 'password_reset' %}" style="color: #2563eb; font-size: 0.9rem;">Forgot password?</a>
-      </div>
-
-      <button type="submit" class="w-full py-3 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-all">
-        Login
-      </button>
-      
-    </form>
-
-    <p style="text-align: center; margin-top: 1rem;">
-      Don’t have an account?
-      <a href="{% url 'users:signup' %}" style="color: #2563eb;">Sign up</a>
-    </p>
-
-    <p style="text-align: center; margin-top: 1rem;">Or</p>
-    <p style="text-align: center;">
-      <a href="{% url 'social_auth:begin' 'google-oauth2' %}" class="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all">
-        Login with Google
-      </a>
-      
-    </p>
-  </div>
+<body class="fullscreen-form">
+<div class="form-box">
+  <h2 class="form-title">Login</h2>
+  <form method="POST" novalidate>
+    {% csrf_token %}
+    <div class="form-group">
+      {{ form.username.label_tag }}
+      {{ form.username }}
+      {{ form.username.errors }}
+    </div>
+    <div class="form-group">
+      {{ form.password.label_tag }}
+      {{ form.password }}
+      {{ form.password.errors }}
+    </div>
+    <button type="submit" class="btn-primary">Login</button>
+  </form>
+  <p class="small-link">
+    Don’t have an account? 
+    <a href="{% url 'users:signup' %}">Sign up</a>
+  </p>
 </div>
-
-<style>
-  .error {
-    color: red;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-  }
-</style>
-{% endblock content %}
+</body>
+{% endblock %}
