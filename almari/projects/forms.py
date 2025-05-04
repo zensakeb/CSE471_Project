@@ -4,9 +4,15 @@ from django import forms
 from .models import Project
 
 class ProjectForm(forms.ModelForm):
+    image_file = forms.ImageField(
+        label="Project Image",
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'w-full text-gray-700'})
+    )
+
     class Meta:
         model = Project
-        fields = ['title', 'description', 'category', 'quantity', 'tags', 'image_url']
+        fields = ['title', 'description', 'category', 'quantity', 'tags',]
 
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
@@ -30,6 +36,6 @@ class ProjectForm(forms.ModelForm):
             'class': 'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-400',
             'placeholder': 'e.g. summer, casual, white'
         })
-        self.fields['image_url'].widget.attrs.update({
+        self.fields['image_file'].widget.attrs.update({
             'class': 'w-full text-gray-700'
         })

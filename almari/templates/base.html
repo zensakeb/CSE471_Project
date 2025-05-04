@@ -26,9 +26,9 @@
         </div>
         <div>
             <nav class="text-white py-3 flex justify-center space-x-8 font-medium">
-                <a href="{% url 'users:frontpage' %}">Home</a>
-                <a href="#about" class="hover:underline">About</a>
-                <a href="#contact" class="hover:underline">Contact</a>
+                <a href="{% url 'core:frontpage' %}" class="hover:text-purple-400">Home</a>
+                <a href="{% url 'core:about' %}" class="hover:text-purple-400">About</a>
+                <a href="{% url 'core:contact' %}" class="hover:text-purple-400">Contact</a>
                 <a href="#social-wall" class="hover:underline">Social Wall</a>
             </nav>
         </div>

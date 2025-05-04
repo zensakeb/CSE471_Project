@@ -5,18 +5,37 @@
 <body class="fullscreen-form">
 
 <header class="w-full py-4 px-6">
-    <div class="text-sm text-white mb-4">
-        Welcome Back <strong>{{ username }}</strong> (User ID: {{ user_id }})
+    <div class="text-center text-white mb-6">
+        <h2 class="text-3xl font-extrabold tracking-wide">
+            Welcome Back,
+            <span class="bg-gradient-to-r from-yellow-300 via-orange-400 to-pink-500 bg-clip-text text-transparent text-4xl drop-shadow-md">
+                {{ username }}
+            </span>
+        </h2>
+        <p class="text-sm mt-2 text-gray-300">User ID: <span class="text-yellow-400 font-semibold">{{ user_id }}</span></p>
     </div>
-    <div class="flex justify-center items-center">
-        <input type="text" class="px-4 py-2 rounded-md border w-full max-w-sm" placeholder="Search...">
-    </div>
+     
+    
 </header>
 
 <main class="max-w-6xl mx-auto py-10 px-6">
     <!-- Search and Buttons -->
     <div class="flex justify-between items-center mb-8">
-        <button class="bg-blue-500 text-white px-6 py-2 ml-4 rounded-md">Categories</button>
+        <form method="get" class="mb-6 flex gap-4">
+            <select name="category" class="px-4 py-2 rounded-md border">
+                <option value="">All Categories</option>
+                <option value="mens_clothing">Men's Clothing</option>
+                <option value="womens_clothing">Women's Clothing</option>
+                <option value="childrens_clothing">Children's Clothing</option>
+                <option value="shoes">Shoes</option>
+                <option value="accessories">Accessories</option>
+            </select>
+        
+            <input type="text" name="tag" class="px-4 py-2 rounded-md border" placeholder="Search by tag">
+        
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Filter</button>
+        </form>
+        
         <button onclick="location.href='{% url 'projects:create_project' %}'"
             class="bg-purple-600 text-white px-6 py-2 rounded-md">
          Create Project
@@ -36,15 +55,25 @@
                 {% else %}
                     <img src="{% static 'images/Buy Now.png' %}" alt="Product" class="w-full h-48 object-cover mb-4">
                 {% endif %}
+                
                 <h3 class="text-lg font-semibold mb-2">{{ project.title }}</h3>
-                <p class="text-gray-600 mb-4">{{ project.description }}</p>
-                <p class="text-gray-600 mb-4">${{ project.price }}</p> <!-- Assuming you have a price field -->
-                <a href="{% url 'projects:add_to_cart' project.id %}" class="bg-green-500 text-white px-4 py-2 rounded-md">Buy Now</a>
+                <p class="text-gray-600 mb-2">{{ project.description }}</p>
+                <p class="text-sm text-purple-600 mb-2">Category: {{ project.category|title }}</p>
+                <p class="text-sm text-gray-500 mb-2">Tags: {{ project.tags }}</p>
+                <p class="text-sm text-gray-600 mb-4">Available: {{ project.quantity }}</p>
+    
+                <!-- Optional price field: fallback if not available -->
+                {% if project.price %}
+                    <p class="text-gray-700 font-semibold mb-4">${{ project.price }}</p>
+                {% endif %}
+    
+                <a href="{% url 'users:add_to_cart' project.id %}" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">Buy Now</a>
             </div>
         {% empty %}
-            <p>No projects available at the moment.</p>
+            <p class="col-span-3 text-center text-gray-600">No projects available at the moment.</p>
         {% endfor %}
     </div>
+    
 </main>
 
 </body>
