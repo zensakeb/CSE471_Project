@@ -50,11 +50,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'almari.projects',
-    'almari.users',
+    'projects',
+    'users',
     'social_django',
     'rest_framework',
-    'almari.customizer',
+    'customizer',
     'loginSignup.googlelogin.usergooglelogin.apps.UserGoogleLoginConfig',
 ]
 
