@@ -5,13 +5,12 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth import get_backends
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
-from django.contrib.auth.forms import UserCreationForm
+
 from users.forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib import messages
 from .models import CustomUser, CartItem, UserActionLog
 from social_django.utils import psa
 from .forms import UserUpdateForm  # Import the form
-from django.contrib.auth.models import User
 from .supabase_client import supabase
 import uuid
 
@@ -30,20 +29,12 @@ class CustomLoginView(LoginView):
         user = self.request.user
         if user.is_superuser:
             return reverse_lazy('users:admin_dashboard')
-        return reverse_lazy('users:frontpage')
+        return reverse_lazy('core:frontpage')
 
     
 def authView(request):
     # Handle your authentication (sign up) logic here
     return render(request, 'registration/signup.html')
-
-@login_required
-def frontpage(request):
-    return render(request, 'core/frontpage.html', {
-        'user_id': request.user.id,
-        'username': request.user.username,
-    })
-
 
 # Profile View
 @login_required
@@ -71,7 +62,7 @@ def edit_profile(request, user_id=None):
             if is_admin_editing:
                 return redirect('users:admin_dashboard')  # ✅ admin goes back to dashboard
             else:
-                return redirect('users:frontpage')  # ✅ normal user goes to frontpage
+                return redirect('core:frontpage')  # ✅ normal user goes to frontpage
         else:
             print("Form errors:", form.errors)
     else:

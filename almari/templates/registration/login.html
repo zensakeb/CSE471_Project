@@ -19,6 +19,26 @@
     </div>
     <button type="submit" class="btn-primary">Login</button>
   </form>
+<!-- instead of 'google', use 'google-oauth2' -->
+<a href="{% url 'social:begin' 'google-oauth2' %}" 
+   class="google-signup-btn">
+  Sign In with Google
+</a>
+
+<!-- Optional styling for the Google button -->
+<style>
+.google-signup-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4285F4;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 20px;
+}
+</style>
   <p class="small-link">
     Don’t have an account? 
     <a href="{% url 'users:signup' %}">Sign up</a>

@@ -1,11 +1,16 @@
 # core/urls.py
 from django.urls import path
-from .views import frontpage, social_wall
+
+from . import views
 
 app_name = 'core'
 
 urlpatterns = [
-    path('', frontpage, name='frontpage'),  # This makes the URL for frontpage view
-    path('social-wall/', social_wall, name='social_wall'),  # URL pattern for social wall
+
+    path('about/', views.about, name='about'),
+    path('contact/', views.contact, name='contact'),
+    path("", views.frontpage, name="frontpage"),
+
+
 ]
 
